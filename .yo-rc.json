@@ -1,0 +1,9 @@
+{
+  "generator-node": {
+    "promptValues": {
+      "authorName": "Jeremy Hughes",
+      "authorEmail": "Jeremy.Hughes@uk.ibm.com",
+      "authorUrl": ""
+    }
+  }
+}

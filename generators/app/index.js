@@ -2,6 +2,7 @@
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
+const Handlebars = require('../lib/handlebars.js');
 const logId = 'generator-ibm-scala';
 
 module.exports = class extends Generator {
@@ -29,25 +30,25 @@ module.exports = class extends Generator {
     const prompts = [
       {
         type: 'input',
-        name: 'Name',
+        name: 'appName',
         message: 'Name of the application',
         default: 'hello'
       },
       {
         type: 'input',
-        name: 'Organization',
+        name: 'organization',
         message: 'Reverse domain name for this application',
         default: 'com.example'
       },
       {
         type: 'input',
-        name: 'Version',
+        name: 'version',
         message: 'Initial version number for this application',
         default: '1.0-SNAPSHOT'
       },
       {
         type: 'input',
-        name: 'Lagom Version',
+        name: 'lagomVersion',
         message: 'The version number of Lagom',
         default: '1.4.6'
       }
@@ -62,10 +63,17 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    this.fs.copy(
-      this.templatePath('dummyfile.txt'),
-      this.destinationPath('dummyfile.txt')
-    );
+    this._writeHandlebarsFile('dummyfile.txt', 'dummyfile.txt', {
+      appName: this.bluemix.name
+    });
+  }
+
+  _writeHandlebarsFile(templateFile, destinationFile, data) {
+    let template = this.fs.read(this.templatePath(templateFile));
+    this.log(Handlebars.compile);
+    let compiledTemplate = Handlebars.compile(template);
+    let output = compiledTemplate(data);
+    this.fs.write(this.destinationPath(destinationFile), output);
   }
 
   install() {

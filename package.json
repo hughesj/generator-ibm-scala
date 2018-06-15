@@ -1,6 +1,6 @@
 {
   "name": "generator-ibm-scala",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Generate a Scala project",
   "homepage": "",
   "author": {
@@ -13,7 +13,8 @@
   ],
   "main": "generators/index.js",
   "keywords": [
-    "scala ibm yeoman",
+    "scala",
+    "ibm",
     "yeoman-generator"
   ],
   "devDependencies": {

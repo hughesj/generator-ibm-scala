@@ -1,0 +1,69 @@
+/*
+ Copyright 2017 IBM Corp.
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ http://www.apache.org/licenses/LICENSE-2.0
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
+
+// module for Handlebars helpers
+
+'use strict';
+
+const Handlebars = require('handlebars');
+
+// Allow slightly more sophisticated inclusion by checking the value of a property, not just it's presence or absence
+Handlebars.registerHelper('has', function(context, options, handler) {
+  let found = Array.isArray(context) ? context.includes(options) : context === options;
+  // See if the current context matches the options passed in
+  if (found) {
+    let data = Handlebars.createFrame(handler.data);
+    return handler.fn(handler.data.root, {
+      data: data,
+      blockParams: [handler.data.root]
+    });
+  }
+  // Parameters didn't match, so don't render anything in the template
+  return undefined;
+});
+
+// Allow slightly more sophisticated exclusion by checking the value of a property, not just it's presence or absence
+Handlebars.registerHelper('missing', function(context, options, handler) {
+  let missing = Array.isArray(context) ? !context.includes(options) : context !== options;
+  // See if the current context matches the options passed in
+  if (missing) {
+    let data = Handlebars.createFrame(handler.data);
+    // Pass back contents as is for processing, rather than the data that is passed as the context
+    return handler.fn(handler.data.root, {
+      data: data,
+      blockParams: [handler.data.root]
+    });
+  }
+  // Parameters matched, so don't render anything in the template
+  return undefined;
+});
+
+// Convert tag contents to lower case
+Handlebars.registerHelper('toLowerCase', function(context) {
+  return String(context).toLowerCase();
+});
+
+Handlebars.registerHelper('tag', function(context) {
+  return new Handlebars.SafeString('{{' + context + '}}');
+});
+
+Handlebars.registerHelper('firstAvailable', function() {
+  for (let i = 0; i < arguments.length; i++) {
+    if (arguments[i] && typeof arguments[i] === 'string') {
+      return arguments[i];
+    }
+  }
+  return 'undefined';
+});
+
+module.exports = Handlebars;

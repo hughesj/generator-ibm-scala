@@ -2,7 +2,7 @@
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
-const Handlebars = require('../lib/handlebars.js');
+const Handlebars = require('../lib/handlebars');
 const logId = 'generator-ibm-scala';
 
 module.exports = class extends Generator {
@@ -30,25 +30,25 @@ module.exports = class extends Generator {
     const prompts = [
       {
         type: 'input',
-        name: 'appName',
+        name: 'Name',
         message: 'Name of the application',
         default: 'hello'
       },
       {
         type: 'input',
-        name: 'organization',
+        name: 'Organization',
         message: 'Reverse domain name for this application',
         default: 'com.example'
       },
       {
         type: 'input',
-        name: 'version',
+        name: 'Version',
         message: 'Initial version number for this application',
         default: '1.0-SNAPSHOT'
       },
       {
         type: 'input',
-        name: 'lagomVersion',
+        name: 'Lagom Version',
         message: 'The version number of Lagom',
         default: '1.4.6'
       }

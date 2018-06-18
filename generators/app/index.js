@@ -3,8 +3,7 @@ require('time-require');
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
-const Handlebars = require('../lib/handlebars');
-const Utils = require('../lib/utils.js');
+const Utils = require('../lib/utils');
 const logId = 'generator-ibm-scala';
 
 module.exports = class extends Generator {
@@ -65,17 +64,9 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    this._writeHandlebarsFile('dummyfile.txt', 'dummyfile.txt', {
+    Utils.writeHandlebarsFile(this, 'dummyfile.txt', 'dummyfile.txt', {
       appName: this.bluemix.name
     });
-  }
-
-  _writeHandlebarsFile(templateFile, destinationFile, data) {
-    let template = this.fs.read(this.templatePath(templateFile));
-    this.log(Handlebars.compile);
-    let compiledTemplate = Handlebars.compile(template);
-    let output = compiledTemplate(data);
-    this.fs.write(this.destinationPath(destinationFile), output);
   }
 
   install() {

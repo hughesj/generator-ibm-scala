@@ -39,11 +39,12 @@ function sanitizeAlphaNum(name) {
 }
 
 function _copyFiles(_this, srcPath, dstPath, templateContext) {
-  logger.debug('Copying files recursively from', srcPath, 'to', dstPath);
-
+  // Logger.debug('Copying files recursively from', srcPath, 'to', dstPath);
+  console.log('Copying files recursively from', srcPath, 'to', dstPath);
   let files = Glob.sync(srcPath + '/**/*', {
     dot: true
   });
+  console.log(files);
 
   _.each(files, function(srcFilePath) {
     // Do not process srcFilePath if it is pointing to a directory

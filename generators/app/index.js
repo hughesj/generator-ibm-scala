@@ -64,7 +64,7 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    Utils.writeHandlebarsFile(this, 'dummyfile.txt', 'dummyfile.txt', {
+    Utils.copyFiles(this, this.templatePath('lagom'), this.destinationPath(), {
       appName: this.bluemix.name
     });
   }

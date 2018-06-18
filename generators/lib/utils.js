@@ -39,36 +39,26 @@ function sanitizeAlphaNum(name) {
 }
 
 function _copyFiles(_this, srcPath, dstPath, templateContext) {
-  // Logger.debug('Copying files recursively from', srcPath, 'to', dstPath);
-  console.log('Copying files recursively from', srcPath, 'to', dstPath);
+  logger.debug('Copying files recursively from', srcPath, 'to', dstPath);
   let files = Glob.sync(srcPath + '/**/*', {
     dot: true
   });
   console.log(files);
 
   _.each(files, function(srcFilePath) {
-    // Do not process srcFilePath if it is pointing to a directory
-    if (fs.lstatSync(srcFilePath).isDirectory()) return;
+    let dstFilePath = srcFilePath.replace(srcPath, dstPath);
+
+    if (fs.lstatSync(srcFilePath).isDirectory()) {
+      fs.mkdirSync(dstFilePath);
+      return;
+    }
 
     // Do not process files that end in .partial, they're processed separately
     if (srcFilePath.indexOf('.partial') > 0 || srcFilePath.indexOf('.replacement') > 0)
       return;
 
-    let dstFilePath = srcFilePath.replace(srcPath, dstPath);
-
-    var functionName = srcFilePath.substring(srcFilePath.lastIndexOf('/') + 1);
-    if (_.isUndefined(functionName)) {
-      return;
-    }
-    logger.debug('Copying file', srcFilePath, 'to', dstFilePath);
-
-    // Lets write the Actions using HandleBars
-    _writeHandlebarsFile(
-      _this,
-      srcFilePath,
-      dstPath + '/' + functionName,
-      templateContext
-    );
+    console.log('Copying file', srcFilePath, 'to', dstFilePath);
+    _writeHandlebarsFile(_this, srcFilePath, dstFilePath, templateContext);
   });
 }
 

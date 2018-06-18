@@ -6,6 +6,7 @@ const yosay = require('yosay');
 const Utils = require('../lib/utils');
 const logId = 'generator-ibm-scala';
 const path = require('path');
+const camelcase = require('camelcase');
 
 module.exports = class extends Generator {
   constructor(args, opts) {
@@ -65,6 +66,12 @@ module.exports = class extends Generator {
     });
   }
 
+  // Add all the Camel Case variants ... well some for now
+  caravan() {
+    this.props.Name__lowerCamel = camelcase(this.bluemix.name);
+    this.props.Name__upperCamel = camelcase(this.bluemix.name, { pascalCase: true });
+  }
+
   writing() {
     //    Console.log("config is: " + this);
     this.log(`${logId}:constructor - Options`, JSON.stringify(this.props));
@@ -76,11 +83,15 @@ module.exports = class extends Generator {
         : this.miscellaneousOptions.organization) +
       '.' +
       name
-    ).replace(/\./g, path.sep);
+    )
+      .replace(/\./g, path.sep)
+      .toLowerCase();
     this.log('name: ' + name);
     this.log('pkg: ' + pkg);
     Utils.copyFiles(this, this.templatePath('lagom'), this.destinationPath(), {
       name: name,
+      name__lowerCamel: this.props.Name__lowerCamel,
+      name__upperCamel: this.props.Name__upperCamel,
       package: pkg
     });
   }

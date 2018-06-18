@@ -16,8 +16,6 @@
 'use strict';
 
 const Handlebars = require('../lib/handlebars');
-const Log4js = require('log4js');
-const logger = Log4js.getLogger('generator-ibm-scala:utils');
 const Glob = require('glob');
 const _ = require('lodash');
 const fs = require('fs');
@@ -39,11 +37,9 @@ function sanitizeAlphaNum(name) {
 }
 
 function _copyFiles(_this, srcPath, dstPath, templateContext) {
-  logger.debug('Copying files recursively from', srcPath, 'to', dstPath);
   let files = Glob.sync(srcPath + '/**/*', {
     dot: true
   });
-  console.log(files);
 
   _.each(files, function(srcFilePath) {
     let dstFilePath = srcFilePath.replace(srcPath, dstPath);
@@ -58,11 +54,8 @@ function _copyFiles(_this, srcPath, dstPath, templateContext) {
       return;
 
     if (srcFilePath.includes('{')) {
-      // Console.log('Was using dstFilePath: ' + dstFilePath);
       dstFilePath = _handlebarsPath(_this, dstFilePath, templateContext);
-      // Console.log('Now using dstFilePath: ' + dstFilePath);
     }
-    // Console.log('Copying file', srcFilePath, 'to', dstFilePath);
     _writeHandlebarsFile(_this, srcFilePath, dstFilePath, templateContext);
   });
 }

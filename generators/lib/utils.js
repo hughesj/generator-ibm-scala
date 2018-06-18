@@ -83,60 +83,9 @@ function _writeHandlebarsFile(_this, templateFile, destinationFile, data) {
   }
 }
 
-function _configureActions(srcPath, language, requestTypes) {
-  // Lets get an Array of Function Names
-  var functions = [];
-
-  let files = Glob.sync(srcPath + '/actions/' + language + '/**/*', {
-    dot: false
-  });
-
-  _.each(files, function(srcFilePath) {
-    // Do not process srcFilePath if it is pointing to a directory
-    if (fs.lstatSync(srcFilePath).isDirectory()) return;
-
-    // Do not process files that end in .partial, they're processed separately
-    if (srcFilePath.indexOf('.partial') > 0 || srcFilePath.indexOf('.replacement') > 0)
-      return;
-
-    var functionName = srcFilePath.substring(srcFilePath.lastIndexOf('/') + 1);
-
-    if (_.isUndefined(functionName)) {
-      return;
-    }
-
-    var shortName = functionName.substring(
-      0,
-      functionName.lastIndexOf(_.suffix(language))
-    );
-    shortName = _.replace(shortName, '.', '');
-    shortName = _.camelCase(shortName);
-
-    // This section of code, looks up the function in the starter kits options to work
-    // out what HTTP Request Type the Function will be configured within the API
-    var functionType = 'GET';
-    if (!_.isUndefined(requestTypes)) {
-      var found = _.find(requestTypes, functionName);
-      if (!_.isUndefined(found[functionName])) {
-        // Lets take the value of the found function
-        functionType = found[functionName];
-      }
-    }
-
-    functions.push({
-      short: shortName,
-      name: functionName,
-      type: functionType
-    });
-  });
-
-  return functions;
-}
-
 module.exports = {
   sanitizeAlphaNum: sanitizeAlphaNum,
   sanitizeAlphaNumLowerCase: sanitizeAlphaNumLowerCase,
   copyFiles: _copyFiles,
-  writeHandlebarsFile: _writeHandlebarsFile,
-  configureActions: _configureActions
+  writeHandlebarsFile: _writeHandlebarsFile
 };

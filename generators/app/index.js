@@ -34,13 +34,13 @@ module.exports = class extends Generator {
       {
         type: 'input',
         name: 'Name',
-        message: 'Name of the application',
+        message: 'Name of the application (lowest level package part)',
         default: 'hello'
       },
       {
         type: 'input',
         name: 'Organization',
-        message: 'Reverse domain name for this application',
+        message: 'Top level organization.',
         default: 'com.example'
       },
       {
@@ -69,12 +69,19 @@ module.exports = class extends Generator {
     //    Console.log("config is: " + this);
     this.log(`${logId}:constructor - Options`, JSON.stringify(this.props));
     // This.log("Args", JSON.stringify(this.args));
-    Utils.copyFiles(this, this.templatePath('lagom'), this.destinationPath(), {
-      name: this.bluemix.name === undefined ? this.props.Name : this.bluemix.name,
-      package: (this.miscellaneousOptions.organization === undefined
+    var name = this.bluemix.name === undefined ? this.props.Name : this.bluemix.name;
+    var pkg = (
+      (this.miscellaneousOptions.organization === undefined
         ? this.props.Organization
-        : this.miscellaneousOptions.organization
-      ).replace('.', path.sep)
+        : this.miscellaneousOptions.organization) +
+      '.' +
+      name
+    ).replace(/\./g, path.sep);
+    this.log('name: ' + name);
+    this.log('pkg: ' + pkg);
+    Utils.copyFiles(this, this.templatePath('lagom'), this.destinationPath(), {
+      name: name,
+      package: pkg
     });
   }
 

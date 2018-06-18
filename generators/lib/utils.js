@@ -49,7 +49,7 @@ function _copyFiles(_this, srcPath, dstPath, templateContext) {
     let dstFilePath = srcFilePath.replace(srcPath, dstPath);
 
     if (fs.lstatSync(srcFilePath).isDirectory()) {
-      fs.mkdirSync(dstFilePath);
+      // Fs.mkdirSync(dstFilePath);
       return;
     }
 
@@ -57,9 +57,19 @@ function _copyFiles(_this, srcPath, dstPath, templateContext) {
     if (srcFilePath.indexOf('.partial') > 0 || srcFilePath.indexOf('.replacement') > 0)
       return;
 
-    console.log('Copying file', srcFilePath, 'to', dstFilePath);
+    if (srcFilePath.includes('{')) {
+      // Console.log('Was using dstFilePath: ' + dstFilePath);
+      dstFilePath = _handlebarsPath(_this, dstFilePath, templateContext);
+      // Console.log('Now using dstFilePath: ' + dstFilePath);
+    }
+    // Console.log('Copying file', srcFilePath, 'to', dstFilePath);
     _writeHandlebarsFile(_this, srcFilePath, dstFilePath, templateContext);
   });
+}
+
+function _handlebarsPath(_this, path, data) {
+  let compiledTemplate = Handlebars.compile(path);
+  return compiledTemplate(data);
 }
 
 function _writeHandlebarsFile(_this, templateFile, destinationFile, data) {

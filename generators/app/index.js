@@ -1,8 +1,10 @@
 'use strict';
+require('time-require');
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
 const Handlebars = require('../lib/handlebars');
+const Utils = require('../lib/utils.js');
 const logId = 'generator-ibm-scala';
 
 module.exports = class extends Generator {

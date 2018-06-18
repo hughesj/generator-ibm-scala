@@ -5,14 +5,16 @@ const chalk = require('chalk');
 const yosay = require('yosay');
 const Utils = require('../lib/utils');
 const logId = 'generator-ibm-scala';
+const path = require('path');
 
 module.exports = class extends Generator {
   constructor(args, opts) {
     // Maybe choose to use java-codegen-common's defaults.js
     super(args, opts);
     this.bluemix = JSON.parse(opts.bluemix || '{}'); // You can also use this.options.bluemix;
-    this.miscellaneousOptions = opts.miscellaneousOptions; // You can also use this.options.miscellaenousOptions
     this.log(`${logId}:constructor - Options`, JSON.stringify(this.options));
+    this.miscellaneousOptions = JSON.parse(opts.miscellaneousOptions || '{}'); // You can also use this.options.miscellaenousOptions
+    this.context = opts;
   }
 
   // Underscore prefix makes this function private, it will not be called by Yo CLI
@@ -64,8 +66,15 @@ module.exports = class extends Generator {
   }
 
   writing() {
+    //    Console.log("config is: " + this);
+    this.log(`${logId}:constructor - Options`, JSON.stringify(this.props));
+    // This.log("Args", JSON.stringify(this.args));
     Utils.copyFiles(this, this.templatePath('lagom'), this.destinationPath(), {
-      appName: this.bluemix.name
+      name: this.bluemix.name === undefined ? this.props.Name : this.bluemix.name,
+      package: (this.miscellaneousOptions.organization === undefined
+        ? this.props.Organization
+        : this.miscellaneousOptions.organization
+      ).replace('.', path.sep)
     });
   }
 

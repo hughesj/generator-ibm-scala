@@ -11,6 +11,6 @@ describe('generator-ibm-scala:app', () => {
   });
 
   it('creates files', () => {
-    assert.file(['dummyfile.txt']);
+    assert.file(['lagom/hello/.sbtopts']);
   });
 });

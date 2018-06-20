@@ -1,1 +1,0 @@
-This app in lower case is: {{#toLowerCase appName}}{{/toLowerCase}}

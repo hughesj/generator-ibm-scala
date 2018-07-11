@@ -66,17 +66,13 @@ module.exports = class extends Generator {
     });
   }
 
-  // Add all the Camel Case variants ... well some for now
-  caravan() {
-    this.props.Name__lowerCamel = camelcase(this.bluemix.name);
-    this.props.Name__upperCamel = camelcase(this.bluemix.name, { pascalCase: true });
-  }
-
   writing() {
     //    Console.log("config is: " + this);
     this.log(`${logId}:constructor - Options`, JSON.stringify(this.props));
     // This.log("Args", JSON.stringify(this.args));
     var name = this.bluemix.name === undefined ? this.props.Name : this.bluemix.name;
+    var nameLowerCamel = camelcase(name);
+    var nameUpperCamel = camelcase(name, { pascalCase: true });
     var pkg = (
       (this.miscellaneousOptions.organization === undefined
         ? this.props.Organization
@@ -90,8 +86,8 @@ module.exports = class extends Generator {
     this.log('pkg: ' + pkg);
     Utils.copyFiles(this, this.templatePath('lagom'), this.destinationPath(), {
       name: name,
-      name__lowerCamel: this.props.Name__lowerCamel,
-      name__upperCamel: this.props.Name__upperCamel,
+      name__lowerCamel: nameLowerCamel,
+      name__upperCamel: nameUpperCamel,
       package: pkg
     });
   }

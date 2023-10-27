@@ -39,7 +39,7 @@
     "handlebars": "^4.0.10",
     "time-require": "^0.1.2",
     "yeoman-generator": "^2.0.1",
-    "yosay": "^2.0.1"
+    "yosay": "^3.0.0"
   },
   "jest": {
     "testEnvironment": "node"
